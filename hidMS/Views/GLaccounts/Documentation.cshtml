@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Documentation";
+}
+<div class="jumbotron">
+    <h1>Hierarchy</h1>
+    <h2>With MVC and Entity Framework</h2>
+    <p>The goal is to facilitate operations in hierarchical tables using functions available for hierarchyid data type.<br />
+    There are two challenges:</p>
+    <ul>
+        <li>Simplify use through set of simple commands.</li>
+        <li>Using Entity Framework without changes, enable hierarchy operations in other databases, in addition to SQL Server.</li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <h3>How?</h3>
+        <p>
+We will use only five basic operations to maintain the hierarchy:
+            </p>
+<ul>
+<li> Adding a new element (as last child of a given parent).</li>
+<li>Promotion. To the same level of his parent.</li>
+<li>Demotion. Becomes the last child of the previous sibling.</li>
+<li>Moving up approaching the parent.</li>
+<li>Move down away from the parent.</li>
+</ul>
+            <p>
+Through these operations it is possible to position a record anywhere in the hierarchy.
+       </p>
+        <p><a class="btn btn-default" href="https://www.youtube.com/embed/zuqZCAz7P88">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-xs-6">
+        <h3>Details</h3>
+<ul>
+<li>We will not use the hierarchyid field. In its place a varbinary field (892). This will allow the Entity Framework to map the field.</li>
+<li>In hierarchy services functions we can convert the byte array data to SqlHierarchyid data type.</li>
+<li>So the application can use the basic functions of the hierarchy handling.</li>
+<li>This is even possible for other databases in addition to MS SQL Server.</li>
+<li>Just use to the field that stores the hierarchyid data, a data type that is mapped to byte array.</li>
+<li>For MySql, for example, varbinary worked in this application.</li>
+</ul>
+<p>See the source code!</p>
+    </div>
+</div>

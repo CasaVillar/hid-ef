@@ -1,0 +1,151 @@
+﻿@model PagedList.IPagedList<hidMy.Models.GLaccounts>
+@using PagedList.Mvc;
+@using System.Collections;
+@using Microsoft.SqlServer;
+@using hidMy.Models;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "GL Accounts";
+    //GLaccountsModel db = new GLaccountsModel();
+    //HierarchyHelper< GLaccounts> hs = new HierarchyHelper<GLaccounts>(db);
+}
+@using (Html.BeginForm("HCommand", "GLaccounts", new { page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <h2>GL Accounts</h2>
+
+    <p>
+        <a href="@Url.Action("Create", "GLaccounts", new { page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })" class="btn btn-sm" title="Create new account as last sibling of selection">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </a>
+        <button class="btn btn-xs" type="submit" name="refresh" value="refresh" title="Refresh page">
+            <i class="glyphicon glyphicon-refresh"></i>
+        </button>
+        <button class="btn btn-xs" type="submit" name="promote" value="promote" title="Promote to parent level as last sibling">
+            <i class="glyphicon glyphicon-arrow-left"></i>
+        </button>
+        <button class="btn btn-xs" type="submit" name="up" value="up" title="Moving up approaching the parent">
+            <i class="glyphicon glyphicon-arrow-up"></i>
+        </button>
+        <button class="btn btn-xs" type="submit" name="down" value="down" title="Move down away from the parent">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </button>
+        <button class="btn btn-xs" type="submit" name="demote" value="demote" title="Demote one level as last child of previous sibling">
+            <i class="glyphicon glyphicon-arrow-right"></i>
+        </button>
+    </p>
+    <table class="table">
+        <tr>
+            <td colspan="7">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @(Model.PageCount)&nbsp;- records per page:
+                <input type="text" page="@Model.PageNumber" name="ip" id="ipTxtBox" maxlength="3" style="width:30px;" value="@(Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"])" />
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ipp = int.Parse(Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) }), new PagedListRenderOptions { MaximumPageNumbersToDisplay = 4, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
+            </td>
+        </tr>
+        <tr>
+            <th>
+            </th>
+            <th></th>
+            <th>
+                Account
+            </th>
+            <th style="padding-left: 0px;">
+                Name
+            </th>
+            <th>
+                Level
+            </th>
+            <th>
+                Parent
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if ((String)Session["itemSelecionado"] == item.Account.ToString())
+                    { @Html.RadioButtonFor(modelItem => item.chk, item.Account, new { id = item.Account, page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]), @class = "toggle", data_url = Url.Action("LinhaSelecionada", "GLaccounts"), style = "width:10px;", @checked = "" }) }
+                    else
+                    { @Html.RadioButtonFor(modelItem => item.chk, item.Account, new { id = item.Account, page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]), @class = "toggle", data_url = Url.Action("LinhaSelecionada", "GLaccounts"), style = "width:10px;" })}
+                </td>
+                <td>
+                    @if (((ArrayList)Session["ContasCollapsedList"]).Contains(item.Account.ToString()))
+                    {
+                        <a href="@Url.Action("Expand", "GLaccounts", new { id = item.Account, pagenumber = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })" class="btn btn-xs" title="Show descendants">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Collapse", "GLaccounts", new { id = item.Account, pagenumber = Model.PageNumber, ipp= (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })" class="btn btn-xs" title="Hide descendants">
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account)
+                </td>
+                @{ var ident = item.Level * 10;}
+                <td style="padding-left: @(ident)px;">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.parent)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "GLaccounts", new { id = item.Account, page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"])})" class="btn btn-sm" title="Update recod">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
+                    <a href="@Url.Action("Details", "GLaccounts", new { id = item.Account, page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })" class="btn btn-sm" title="Show record details">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </a>
+                    <a href="@Url.Action("Delete", "GLaccounts", new { id = item.Account, page = Model.PageNumber, ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })" class="btn btn-sm" title="Delete record">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+                    }
+    </table>
+                    }
+@section scripts {
+    <script>
+        $(function () {
+            $('.toggle').click(function () {
+                var self = $(this);
+                var url = self.data('url');
+                var id = self.attr('id');
+                var page = self.attr('page');
+                var ipp = self.attr('ipp');
+                $.ajax({
+                    url: url,
+                    data: { id: id, page: page, ipp: ipp },
+                    type: 'POST',
+                    success: function (retUrl) { window.location.href = retUrl; }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#ipTxtBox').change(function () {
+                var self = $(this);
+                var url = '@Url.Action("ItemsPerPage", "GLaccounts")';
+                var page = self.attr('page');
+                var ipp = self.val();
+                $.ajax({
+                    url: url,
+                    data: { page: page, ipp: ipp },
+                    type: 'POST',
+                    success: function (retUrl) { window.location.href = retUrl; }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿@model hidMy.Models.GLaccounts
+
+@{
+    ViewBag.Title = "Excluir";
+}
+
+<h2>Excluir</h2>
+
+<h3>Confirma a exclusão?</h3>
+<div>
+    <h4>Contas</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <div class="col-md-offset-2 col-md-12">
+                <button class="btn btn-default" type="submit" id="saveC" title="Excluir o registro">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+            </div>
+            <div>
+                @Html.ActionLink("Lista", "Index", new { page = (Request.QueryString["page"] ?? (string)Session["DefaultItemsPerPage"]), ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })
+            </div>
+        </div>
+    }
+</div>

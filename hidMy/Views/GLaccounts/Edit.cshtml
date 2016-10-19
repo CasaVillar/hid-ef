@@ -1,0 +1,44 @@
+﻿@model hidMy.Models.GLaccounts
+@using System.Web.Optimization;
+@{
+    ViewBag.Title = "Update";
+}
+
+<h2>Alterar</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Alterar Conta</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Account)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-default" type="submit" id="saveC" title="Save">
+                    <i class="glyphicon glyphicon-save"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("List", "Index", new { page = (Request.QueryString["page"] ?? (string)Session["DefaultItemsPerPage"]), ipp = (Request.QueryString["ipp"] ?? (string)Session["DefaultItemsPerPage"]) })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

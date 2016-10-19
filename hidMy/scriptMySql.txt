@@ -1,0 +1,6 @@
+CREATE TABLE GLaccounts (
+  Account bigint(20) NOT NULL AUTO_INCREMENT,
+  Name varchar(150) NOT NULL,
+  hid varbinary(892) DEFAULT NULL,
+  PRIMARY KEY (Account)
+); 
