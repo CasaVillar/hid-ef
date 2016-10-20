@@ -31,4 +31,10 @@ Through these operations it is possible to position a record anywhere in the hie
 *   For MySql, for example, varbinary (and blob) worked in this application.
 
 See the source code!
+
+###Sample Projects on GitHub
+
+*   HidMy – Accessing MySql using Hierarchy.Universal namespace.
+*   HidMS – Accessing Sql Server using Hierarchy.SqlServer namespace.
+*   Both project will load nuget package EntityFramework.Hierarchy.
  
