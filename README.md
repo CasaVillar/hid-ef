@@ -1,4 +1,4 @@
-# Hierarchy
+﻿# Hierarchy
 ## With MVC and Entity Framework
 
 The goal is to facilitate operations in hierarchical tables using functions available for hierarchyid data type.  
@@ -38,3 +38,5 @@ See the source code!
 *   HidMS – Accessing Sql Server using Hierarchy.SqlServer namespace.
 *   Both project will load nuget package EntityFramework.Hierarchy.
  
+### www.casavillar.com.br
+
